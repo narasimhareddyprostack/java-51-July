@@ -8,19 +8,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class JDBCCrud {
+public class CRUDT {
 	static Scanner sc=new Scanner(System.in);
 	static Connection con;
 	public static void main(String[] args) {
-	JDBCCrud obj=new JDBCCrud();
+	CRUDT obj=new CRUDT();
 	try {
 		//load the driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		//establish connection
 		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pro18", "root", "root");
 		
-		System.out.println("Enter your option 1 - insert, 2-read 3-update 4-delete");
-		
+		System.out.println("Enter your option: 1-insert,2-read,3-update,4-delete");
 		int opt=Integer.parseInt(sc.nextLine());
 		switch(opt){
 			case 1:
@@ -33,20 +32,19 @@ public class JDBCCrud {
 				obj.updateData();
 				break;
 			case 4:
-				obj.deleteEmp();
+				obj.deletedata();
 				break;
 			default:
-				obj.chouseOption();	
+				obj.defaultmode();	
 		}
 	}catch(Exception e) {
-		System.out.println("Unable to connet");
+		System.out.println("connection failed");
 	}
 	
 	
 	
-
 	}
-	private void chouseOption() {
+	private void defaultmode() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -84,52 +82,57 @@ public class JDBCCrud {
 				int eid=rs.getInt(1);
 				String ename=rs.getString(2);
 				int esal = rs.getInt(3);
-				System.out.println("Emp Id:"+eid+"-Emp Name:"+ename+"-E Salary"+esal);
+				System.out.println("Emp Id:"+eid+" "+"Emp Name:"+ename+" "+"Emp Salary:"+esal);
 			}
 			else {
 				System.out.println("No Data");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		System.out.println("Data Displayed");
+		
 	}
 	private void updateData() throws SQLException {
+		
+		String sql_st="UPDATE  emp set ename = ? where eid= ? ";  
+		PreparedStatement st=con.prepareStatement(sql_st);
+		System.out.println("Enter Emp Name:");
+		st.setString(1, sc.nextLine());
+
+		
 		System.out.println("Enter Emp Id:");
-		int empId=sc.nextInt();
+		st.setInt(2, sc.nextInt());
 		
-		System.out.println("Enter Emp Name to Update:");
-		String ename = sc.nextLine();
-		System.out.println(ename);
-		//String sql_St = "update emp set ename = 'Rahul Gandhi' where eid=?";
-		String sql_St = "update emp set ename =? where eid=?";
-		PreparedStatement st=con.prepareStatement(sql_St);
 		
-		st.setInt(2, empId);
-		st.setString(1, ename);
 		
 		int row=st.executeUpdate();
 		if(row>0) {
-			System.out.println("Data Updated");
+			System.out.println("Data updated");
 		}
 		else {
-			System.out.println("Data Not Updated");
+			System.out.println("Data Not updated");
 		}
-		;
+		
+		
 	}
-	private void deleteEmp() throws SQLException {
-		System.out.println("Enter Emp Id to delete");
-		int eid=sc.nextInt();
-		String sql_st="delete from emp where eid="+eid;
-		Statement st=con.createStatement();
-		int rows=st.executeUpdate(sql_st);
-		if(rows>0) {
-			System.out.println("Emp Rec deleted");
+	private void deletedata() throws SQLException {
+		String sql_st="DELETE FROM emp where eid= ? ";  
+		PreparedStatement st=con.prepareStatement(sql_st);
+	
+		System.out.println("Enter Emp Id:");
+		st.setInt(1, sc.nextInt());
+		
+		
+		
+		int row=st.executeUpdate();
+		if(row>0) {
+			System.out.println("Data deleted");
 		}
 		else {
-			System.out.println("Unable to Delete");
+			System.out.println("Data Not deleted");
 		}
+		
+	
 	}
 
 }
