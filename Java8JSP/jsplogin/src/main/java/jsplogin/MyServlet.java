@@ -18,11 +18,13 @@ public class MyServlet extends HttpServlet {
 		PrintWriter out=resp.getWriter();
 		out.print("Hello,Good After noon");
 		
-		HttpSession session=req.getSession();  	
+		req.setAttribute("org_Name", "TCS");
+		out.print(req.getAttribute("org_Name"));
 		
-		session.setAttribute("u_name","Rahul Gandhi");
 		
-		String name = (String)req.getAttribute("u_name");
-		out.print(name);
+		HttpSession session = req.getSession();
+		session.setAttribute("firstName", "Rahul");
+		
+		out.print(session.getAttribute("firstName"));
 	}
 }
